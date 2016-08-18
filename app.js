@@ -23,7 +23,7 @@ module.exports = function (config) {
     require('./conf/settings')(app);
 
     // Build routes
-    require('./routes')(app, models);
+    require('./routes')(app, models, config);
 
     // Start server
     var server = http.createServer(app);

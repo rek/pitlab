@@ -9,7 +9,7 @@
 var log = require('book');
 
 // ### Exports
-module.exports = function (app, models) {
+module.exports = function (app, models, conf) {
 
     // ### POST /storyupdate/:repoPath
     // Updates gitlab repo identified by `repoPath` according the event from pivotal
