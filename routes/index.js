@@ -28,14 +28,15 @@ module.exports = function (app, models, conf) {
         var repoPath = req.params[0],
             activity = req.body.activity;
 
-        console.log('Checking story:', activity.stories.story.name);
-        console.log('Orignal repo:', repoPath);
+        // console.log('Checking story:', activity.stories.story.name);
+        // console.log('Orignal repo:', repoPath);
 
         function updateRepo (title) {
             var match = /\[(\w)\]/.exec(title)
             // console.log('match', match);
 
             if (match && match[1] && conf.repo_map[match[1]]) {
+                log.info('Orignal repo:', repoPath);
                 return conf.repo_map[match[1]]
             } else {
                 return repoPath
@@ -44,9 +45,8 @@ module.exports = function (app, models, conf) {
 
         if (conf.repo_map) {
             repoPath = updateRepo(activity.stories.story.name)
+            log.info('Processed repo:', repoPath);
         }
-
-        console.log('Processed repo:', repoPath);
 
         // Handle event
         models.pivotal.handle(repoPath, activity, function (err, result) {
