@@ -53,7 +53,7 @@ module.exports = function (app) {
     // Add router
     app.use(app.router);
 
-    // ### Massabe Obj
+    // ### Massage Obj
     // Sets attributes as properties and '_' as 'value'
     // All properties are camelcase
     function massageObj (obj) {
