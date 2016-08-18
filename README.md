@@ -1,31 +1,35 @@
 ## PitLab
 
-Allows integration of [PivotalTracker](http://pivotaltracker.com/) story additions, updates, and comments into [GitLab](https://github.com/gitlabhq/gitlabhq) issues.  
+Allows integration of [PivotalTracker](http://pivotaltracker.com/) story additions, updates, and comments into [GitLab](https://github.com/gitlabhq/gitlabhq) issues.
 
 PitLab does not require or provide an external tool integration to import stories into PivotalTracker from GitLab.  The issues created / updated by PitLab are identified using tags.
 
+### Notes on fork:
+
+1. Added extra 'repo_map' config option, to allow for tickets to be created in other repos.
+
 ### Setup
 
-1. **Install PitLab**  
+1. **Install PitLab**
     ```
     npm install -g pitlab
     ```
 
-1. **Start PitLab**  
+1. **Start PitLab**
     ```
     PITLAB_PORT=3000 pitlab path/to/config.json
     ```
 
-1. **Configure Pivotal Tracker Project**  
-    Go to the project you wish to integrate -> Settings -> Integrations -> Activity Web Hook  
-    Fill in the form as follows  
+1. **Configure Pivotal Tracker Project**
+    Go to the project you wish to integrate -> Settings -> Integrations -> Activity Web Hook
+    Fill in the form as follows
       * **Web Hook URL** url to interact with PitLab, of the form `http://<host>:3000/storyupdate/<repo_path`
           * **host** is the publicly available location pitlab is deployed
           * **repo_path** is the gitlab path to the project to integrate with, including the group (e.g. `<group>/<project>`)
       * **API Version** v3
 
 ### Configuration
-PitLab expects a JSON configuration file when initiated from the command line.  The configuration has the following properties:  
+PitLab expects a JSON configuration file when initiated from the command line.  The configuration has the following properties:
 * **gitlab_url**: [Required] base URL of GitLab installation
 * **gitlab_token**: [Required] usable API token within GitLab (found within your user profile on GitLab)
   * Note that the provided token must have access to each GitLab projected intended to be integrated with PivotalTracker.  It is recommended to create a "dummy" user with necessary privileges on each project to integrate and use its API token.
@@ -33,6 +37,7 @@ PitLab expects a JSON configuration file when initiated from the command line.  
 * **create_on_state**: [Optional] Array of story states indicating an issue needs to be created.  States must be one of `started`, `finished`, `delivered`, `rejected`, `accepted`.
 * **create_on_type**: [Optional] Array of story types indicating an issue needs to be created, after the story is created within PivotalTracker.  Types must be one of `feature`, `bug`, `chore`, `release`.
 * **post_comments**: [Optional] Boolean indicating whether to post comments from a story to a linked issue.
+* **repo_map**: [Optional] Object containg keys if found in title, will move ticket to another repo, example title: 'Make this story in another place [A]'. This will make that ticket in the repo matching 'A'
 
 Example configuration:
 ```json
@@ -42,7 +47,11 @@ Example configuration:
     "close_on_state": ["accepted"],
     "create_on_type": ["feature","bug"],
     "create_on_state": ["rejected"],
-    "post_comments": true
+    "post_comments": true,
+    "repo_map": {
+      "A": "root/repo-A",
+      "R": "root/repo-B"
+    }
 }
 ```
 
